@@ -16,22 +16,49 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   min-height: 100vh;
-  background: linear-gradient(135deg, #13132e, #260d3b, #081d3b, #20124e, #082f38, #411329);
-  background-size: 400% 400%;
-  animation: gradientShift 18s ease infinite;
+  position: relative;
 }
 
-@keyframes gradientShift {
-  0%   { background-position: 0% 50%; }
-  25%  { background-position: 100% 0%; }
-  50%  { background-position: 100% 100%; }
-  75%  { background-position: 0% 100%; }
-  100% { background-position: 0% 50%; }
+/* ── Scrolling background strip ── */
+.bg-strip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  z-index: -1;
+  filter: brightness(0.45);
+  animation: panLeft 45s linear infinite;
+  /* prevent layout interference */
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.bg-strip img {
+  height: 100vh;
+  width: auto;        /* natural aspect ratio, height fills viewport */
+  display: block;
+  flex-shrink: 0;
+}
+
+@keyframes panLeft {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* 50% = first 5 images, loops into duplicate */
 }
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;
+}
+
+/* ── Petals canvas ── */
+#petals {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* ── Controls Bar ── */
@@ -69,6 +96,8 @@ body::-webkit-scrollbar {
   justify-content: center;
   align-items: flex-start;
   padding: 0 1.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Poem Container ── */
@@ -109,6 +138,7 @@ body::-webkit-scrollbar {
   letter-spacing: 0.03em;
   opacity: 0;
   transform: translateY(22px);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8), 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 .poem-line.visible {

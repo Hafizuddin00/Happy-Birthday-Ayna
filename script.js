@@ -82,6 +82,7 @@ window.addEventListener('scroll', () => {
 // ── DOM refs ─────────────────────────────────────────────────────────────────
 const container    = document.getElementById('poem-container');
 const btnPlayPause = document.getElementById('btn-play-pause');
+const music        = document.getElementById('bg-music');
 
 // ── Smooth scroll utility ─────────────────────────────────────────────────
 // Animates window scroll to a target Y position over `duration` ms.
@@ -193,5 +194,131 @@ function restartPoem() {
 
 
 // ── Init ─────────────────────────────────────────────────────────────────────
-// Small initial delay so the page renders before the first line appears
 timer = setTimeout(showNextLine, 1200);
+
+// ── Music autoplay ────────────────────────────────────────────────────────
+music.play().then(() => {
+  musicOn = true;
+}).catch(() => {
+  const unlock = () => {
+    music.play().then(() => { musicOn = true; }).catch(() => {});
+  };
+  document.addEventListener('click',      unlock, { once: true });
+  document.addEventListener('touchstart', unlock, { once: true });
+  document.addEventListener('keydown',    unlock, { once: true });
+});
+
+function toggleMusic() {
+  if (musicOn) {
+    music.pause();
+    musicOn = false;
+    document.getElementById('btn-music').textContent = '🎵 Music';
+  } else {
+    music.play().catch(() => {});
+    musicOn = true;
+    document.getElementById('btn-music').textContent = '🔇 Mute';
+  }
+}
+
+// ── Floating petals & particles ───────────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('petals');
+  const ctx    = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Petal shape: small teardrop drawn with bezier curves
+  function drawPetal(ctx, x, y, size, angle, alpha) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.globalAlpha = alpha;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo( size * 0.6,  -size * 0.8,  size * 1.2, -size * 0.2,  0, size);
+    ctx.bezierCurveTo(-size * 1.2, -size * 0.2, -size * 0.6,  -size * 0.8,  0, 0);
+    ctx.closePath();
+    ctx.fillStyle = '#e8a0a0';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Particle: tiny golden glint
+  function drawParticle(ctx, x, y, r, alpha) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#f5d08a';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  const PETAL_COUNT    = 18;
+  const PARTICLE_COUNT = 25;
+
+  // Initialise petals
+  const petals = Array.from({ length: PETAL_COUNT }, () => spawnPetal(true));
+  const particles = Array.from({ length: PARTICLE_COUNT }, () => spawnParticle(true));
+
+  function spawnPetal(random) {
+    return {
+      x:      Math.random() * window.innerWidth,
+      y:      random ? Math.random() * window.innerHeight : -20,
+      size:   6 + Math.random() * 7,
+      speedY: 0.4 + Math.random() * 0.6,
+      speedX: (Math.random() - 0.5) * 0.5,
+      angle:  Math.random() * Math.PI * 2,
+      spin:   (Math.random() - 0.5) * 0.02,
+      alpha:  0.5 + Math.random() * 0.4,
+      sway:   Math.random() * Math.PI * 2,
+      swaySpeed: 0.008 + Math.random() * 0.008,
+    };
+  }
+
+  function spawnParticle(random) {
+    return {
+      x:      Math.random() * window.innerWidth,
+      y:      random ? Math.random() * window.innerHeight : window.innerHeight + 5,
+      r:      0.8 + Math.random() * 1.4,
+      speedY: -(0.3 + Math.random() * 0.5),
+      alpha:  0.4 + Math.random() * 0.5,
+      flicker: Math.random() * Math.PI * 2,
+      flickerSpeed: 0.03 + Math.random() * 0.04,
+    };
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Update & draw petals
+    for (let i = 0; i < petals.length; i++) {
+      const p = petals[i];
+      p.sway  += p.swaySpeed;
+      p.x     += p.speedX + Math.sin(p.sway) * 0.4;
+      p.y     += p.speedY;
+      p.angle += p.spin;
+      if (p.y > canvas.height + 20) petals[i] = spawnPetal(false);
+      drawPetal(ctx, p.x, p.y, p.size, p.angle, p.alpha);
+    }
+
+    // Update & draw particles
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.flicker += p.flickerSpeed;
+      p.y       += p.speedY;
+      const a = p.alpha * (0.6 + 0.4 * Math.sin(p.flicker));
+      if (p.y < -5) particles[i] = spawnParticle(false);
+      drawParticle(ctx, p.x, p.y, p.r, a);
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+})();

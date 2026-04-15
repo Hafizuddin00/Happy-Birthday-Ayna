@@ -4,19 +4,37 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Happy Birthday Ayna</title>
+  <link rel="icon" type="image/png" href="image/icon.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Background music (optional) -->
-  <audio id="bg-music" loop>
-    <source src="music.mp3" type="audio/mpeg" />
+  <!-- Floating petals canvas -->
+  <canvas id="petals" aria-hidden="true"></canvas>
+  <div class="bg-strip" aria-hidden="true">
+    <img src="image/photo_2026-04-15_11-26-55.jpg" alt="" />
+    <img src="image/photo_2026-04-15_11-26-57.jpg" alt="" />
+    <img src="image/photo_2026-04-15_11-26-58.jpg" alt="" />
+    <img src="image/photo_2026-04-15_11-27-00.jpg" alt="" />
+    <img src="image/photo_2026-04-15_11-27-03.jpg" alt="" />
+    <!-- duplicate for seamless loop -->
+    <img src="image/photo_2026-04-15_11-26-55.jpg" alt="" />
+    <img src="image/photo_2026-04-15_11-26-57.jpg" alt="" />
+    <img src="image/photo_2026-04-15_11-26-58.jpg" alt="" />
+    <img src="image/photo_2026-04-15_11-27-00.jpg" alt="" />
+    <img src="image/photo_2026-04-15_11-27-03.jpg" alt="" />
+  </div>
+
+  <!-- Background music -->
+  <audio id="bg-music" loop autoplay>
+    <source src="song/Satu Bunga - Teman Lelaki & Aziem Rashidi.aac" type="audio/aac" />
   </audio>
 
   <!-- Controls -->
   <div class="controls" id="controls">
     <button id="btn-play-pause" onclick="togglePlayPause()">⏸ Pause</button>
     <button id="btn-restart" onclick="restartPoem()">↺ Restart</button>
+    <button id="btn-music" onclick="toggleMusic()">🔇 Mute</button>
   </div>
 
   <!-- Poem container -->
