@@ -82,7 +82,6 @@ window.addEventListener('scroll', () => {
 // ── DOM refs ─────────────────────────────────────────────────────────────────
 const container    = document.getElementById('poem-container');
 const btnPlayPause = document.getElementById('btn-play-pause');
-const music        = document.getElementById('bg-music');
 
 // ── Smooth scroll utility ─────────────────────────────────────────────────
 // Animates window scroll to a target Y position over `duration` ms.
@@ -191,19 +190,7 @@ function restartPoem() {
   timer = setTimeout(showNextLine, 800);
 }
 
-function toggleMusic() {
-  const btn = document.getElementById('btn-music');
-  if (musicOn) {
-    music.pause();
-    btn.textContent = '🎵 Music';
-  } else {
-    music.play().catch(() => {
-      // Autoplay blocked or no file — silently ignore
-    });
-    btn.textContent = '🔇 Mute';
-  }
-  musicOn = !musicOn;
-}
+
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 // Small initial delay so the page renders before the first line appears
