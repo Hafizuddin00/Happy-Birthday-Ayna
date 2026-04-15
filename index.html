@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Ayna</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background music (optional) -->
+  <audio id="bg-music" loop>
+    <source src="music.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Controls -->
+  <div class="controls" id="controls">
+    <button id="btn-play-pause" onclick="togglePlayPause()">⏸ Pause</button>
+    <button id="btn-restart" onclick="restartPoem()">↺ Restart</button>
+    <button id="btn-music" onclick="toggleMusic()">🎵 Music</button>
+  </div>
+
+  <!-- Poem container -->
+  <main class="poem-wrapper">
+    <div class="poem-container" id="poem-container"></div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

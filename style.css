@@ -1,0 +1,166 @@
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  color: #f0e6d3;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #13132e, #260d3b, #081d3b, #20124e, #082f38, #411329);
+  background-size: 400% 400%;
+  animation: gradientShift 18s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  25%  { background-position: 100% 0%; }
+  50%  { background-position: 100% 100%; }
+  75%  { background-position: 0% 100%; }
+  100% { background-position: 0% 50%; }
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Controls Bar ── */
+.controls {
+  position: fixed;
+  top: 1.2rem;
+  right: 1.4rem;
+  display: flex;
+  gap: 0.6rem;
+  z-index: 100;
+}
+
+.controls button {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f0e6d3;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  transition: background 0.3s, transform 0.2s;
+  backdrop-filter: blur(6px);
+}
+
+.controls button:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+/* ── Poem Stage ── */
+.poem-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 1.5rem;
+}
+
+/* ── Poem Container ── */
+.poem-container {
+  max-width: 680px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding-top: 50vh;
+  padding-bottom: 50vh;
+  transition: padding-top 0.6s ease, padding-bottom 0.6s ease;
+}
+
+/* ── Individual Line wrapper — animates height open ── */
+.poem-line-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.poem-line-wrap.expanding {
+  grid-template-rows: 1fr;
+}
+
+/* inner element must have overflow:hidden for grid trick to work */
+.poem-line-wrap > p {
+  overflow: hidden;
+}
+
+/* ── Individual Line ── */
+.poem-line {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  line-height: 1.9;
+  text-align: center;
+  color: #f0e6d3;
+  letter-spacing: 0.03em;
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+.poem-line.visible {
+  animation: fadeUp 1.2s ease forwards;
+}
+
+/* Stanza spacer */
+.poem-line-wrap.stanza-break {
+  margin-top: 1.4rem;
+}
+
+/* ── Fade-up Keyframe ── */
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Cursor blink while waiting ── */
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: #c9a96e;
+  margin-left: 4px;
+  vertical-align: middle;
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ── Finished glow ── 
+.poem-container.done::after {
+  content: '✦';
+  display: block;
+  text-align: center;
+  margin-top: 2.5rem;
+  font-size: 1.4rem;
+  color: #c9a96e;
+  opacity: 0;
+  animation: fadeUp 1.5s ease 0.3s forwards;
+}
+*/
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .controls {
+    top: auto;
+    bottom: 1rem;
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
